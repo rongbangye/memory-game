@@ -61,3 +61,130 @@ const cardsArray = [
 
   // Append the grid section to the game div
   game.appendChild(grid)
+
+  // for each item in the cardsArray
+  // cardsArray.forEach(item => {
+  //   const card = document.createElement('div')
+
+  //   card.classList.add('card')
+
+  //   // set the data-name attribute of the div to the cardsArray name
+  //   card.dataset.name = item.name
+
+  //   card.style.backgroundImage = `url(${item.img})`
+
+  //   // append the div to the grind section
+  //   grid.appendChild(card)
+  // })
+
+  // duplicate the cardsArray array that match for each card
+  let gameGrid = cardsArray.concat(cardsArray)
+
+  // Randomize the display of cards 
+  // shuffle the array using sort() and Math.random()
+  gameGrid.sort(() => Math.random() - 0.5);
+
+
+  // for reach item in the gameGrib array
+  gameGrid.forEach(item => {
+    const card = document.createElement('div')
+
+    card.classList.add('card')
+
+    // set the data-name attribute of the div to the cardsArray name
+    card.dataset.name = item.name
+
+    card.style.backgroundImage = `url(${item.img})`
+
+    // append the div to the grind section
+    grid.appendChild(card)
+  })
+
+// Only allow two cards to be selected at a time
+// we need to store the guesses and counter
+let count = 0
+// add a place to store the first and second guessess 
+let firstGuess = ''
+let secondGuess = ''
+// to fix click on the same element twice, use previousTarget
+let previousTarget = null
+ 
+
+// add an event listener to the entire grid.
+// anytime an element is clicked, the selected class will be apply
+grid.addEventListener('click', function(event) {
+  // the event target is our clicked item
+  let clicked = event.target
+
+  // add the check to our return 
+  if (clicked.nodeName === 'SECTION' || clicked === previousTarget) {
+    return
+  }
+
+  // Do not allow the grid section itself to be selected
+  // only select divs inside the grid
+  if (clicked.nodeName === 'SECTION') {
+    return
+  }
+
+  // add selected class
+  // clicked.classList.add('selected')
+
+  // modify the event listener to have an if statement that counts to two
+  if(count < 2) {
+    count ++
+    if (count === 1) {
+      firstGuess = clicked.dataset.name
+      // add selected class
+      clicked.classList.add('selected')
+    } else {
+      secondGuess = clicked.dataset.name
+      clicked.classList.add('selected')
+    }
+    // if bot guessess are not empty
+    if (firstGuess !== '' && secondGuess !== '') {
+      // if the first guess match the second guess
+      if (firstGuess === secondGuess) {
+        // run match function
+        match();
+        resetGuessess();
+      } else {
+        resetGuessess();
+      }
+    }
+      // assign the clicked value to the previousTarget after the first click
+      previousTarget = clicked;
+  }
+
+  // add delay
+  if (firstGuess === secondGuess) {
+    setTimeout(match, delay)
+    setTimeout(resetGuesses, delay)
+  } else {
+    setTimeout(resetGuesses, delay)
+  }
+})
+
+
+// function for matching elements, loop through all selected elements when called, then add match class
+const match = () => {
+  var selected = document.querySelectorAll('.selected')
+  selected.forEach(card => {
+    card.classList.add('match')
+  })
+}
+
+// function to reset the guess count after two guessess. 
+const resetGuessess = () => {
+  firstGuess = ''
+  secondGuess = ''
+  count = 0
+
+  var selected = document.querySelectorAll('.selected')
+  selected.forEach(card => {
+    card.classList.remove('selected')
+  })
+}
+
+
+
