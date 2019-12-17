@@ -88,16 +88,25 @@ const cardsArray = [
   // for reach item in the gameGrib array
   gameGrid.forEach(item => {
     const card = document.createElement('div')
-
     card.classList.add('card')
-
     // set the data-name attribute of the div to the cardsArray name
     card.dataset.name = item.name
+    // Version 9: In order to implement the flip, each div will need to consist of three divs
+    const front = document.createElement('div')
+    front.classList.add('front')
+
+    // create back of card
+    const back = document.createElement('div')
+    back.classList.add('back')
+
+
 
     card.style.backgroundImage = `url(${item.img})`
 
     // append the div to the grind section
     grid.appendChild(card)
+    card.appendChild(front)
+    card.appendChild(back)
   })
 
 // Only allow two cards to be selected at a time
@@ -109,6 +118,7 @@ let secondGuess = ''
 // to fix click on the same element twice, use previousTarget
 let previousTarget = null
  
+let delay = 1200
 
 // add an event listener to the entire grid.
 // anytime an element is clicked, the selected class will be apply
@@ -117,7 +127,10 @@ grid.addEventListener('click', function(event) {
   let clicked = event.target
 
   // add the check to our return 
-  if (clicked.nodeName === 'SECTION' || clicked === previousTarget) {
+  if (clicked.nodeName === 'SECTION' || 
+      clicked === previousTarget ||
+      clicked.parentNode.classList.contains('selected')
+  ){
     return
   }
 
@@ -134,12 +147,13 @@ grid.addEventListener('click', function(event) {
   if(count < 2) {
     count ++
     if (count === 1) {
-      firstGuess = clicked.dataset.name
-      // add selected class
-      clicked.classList.add('selected')
+      firstGuess = clicked.parentNode.dataset.name
+      console.log(firstGuess)
+      clicked.parentNode.classList.add('selected')
     } else {
-      secondGuess = clicked.dataset.name
-      clicked.classList.add('selected')
+      secondGuess = clicked.parentNode.dataset.name
+      console.log(secondGuess)
+      clicked.parentNode.classList.add('selected')
     }
     // if bot guessess are not empty
     if (firstGuess !== '' && secondGuess !== '') {
@@ -152,16 +166,16 @@ grid.addEventListener('click', function(event) {
         resetGuessess();
       }
     }
+
+    // add delay
+    if (firstGuess === secondGuess) {
+      setTimeout(match, delay)
+      setTimeout(resetGuessess, delay)
+    } else {
+      setTimeout(resetGuessess, delay)
+    }
       // assign the clicked value to the previousTarget after the first click
       previousTarget = clicked;
-  }
-
-  // add delay
-  if (firstGuess === secondGuess) {
-    setTimeout(match, delay)
-    setTimeout(resetGuesses, delay)
-  } else {
-    setTimeout(resetGuesses, delay)
   }
 })
 
