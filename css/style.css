@@ -18,18 +18,14 @@ body {
 }
 
 .card {
-    margin: 5px;
-    background-color: #6589F9;
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center center;
-    height: 150px;
-    width: 150px;
 }
 
 .card {
     position: relative;
-    transition: all 0.4s linear;
+    transition: all  linear;
     transform-style: preserve-3d;
     margin: 5px;
 }

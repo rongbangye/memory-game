@@ -144,14 +144,17 @@ grid.addEventListener('click', function(event) {
       clicked.parentNode.classList.add('selected')
     }
     // if bot guessess are not empty
-    if (firstGuess !== '' && secondGuess !== '') {
+    if (firstGuess && secondGuess) {
       // if the first guess match the second guess
       if (firstGuess === secondGuess) {
         // run match function
         setTimeout(match, delay);
+        setTimeout(resetGuessess, delay);
       } else {
         setTimeout(resetGuessess, delay);
       }
+      // assign the clicked value to the previousTarget after the first click
+      previousTarget = clicked;
     }
 
 /*   // add delay
@@ -162,8 +165,7 @@ grid.addEventListener('click', function(event) {
       setTimeout(resetGuessess, delay)
     }
 */
-      // assign the clicked value to the previousTarget after the first click
-      previousTarget = clicked;
+      
   }
 })
 
